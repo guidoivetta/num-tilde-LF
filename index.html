@@ -65,23 +65,21 @@
         // why draw when you can click?
       }
 
-      function convert_millions(num) {
-        if (num >= 1000000) {
-          return (
-            convert_millions(Math.floor(num / 1000000)) +
-            " million " +
-            convert_thousands(num % 1000000)
-          );
-        } else {
-          return convert_thousands(num);
-        }
+      function convert_tens_thousands(num) {
+        if (num <= 11110) return convert_thousands(num);
+        return (
+          tens[Math.floor((num - 1111) / 10000)] +
+          " " +
+          convert_thousands(num - Math.floor((num - 1111) / 10000) * 10000)
+        );
       }
 
       function convert_thousands(num) {
         if (num <= 1110) return convert_hundreds(num);
         return (
-          hundreds[Math.floor((num - 11) / 100)] +
-          convert_tens(num - Math.floor((num - 11) / 100) * 100)
+          thousands[Math.floor((num - 111) / 1000)] +
+          " " +
+          convert_hundreds(num - Math.floor((num - 111) / 1000) * 1000)
         );
       }
 
@@ -89,6 +87,7 @@
         if (num <= 110) return convert_tens(num);
         return (
           hundreds[Math.floor((num - 11) / 100)] +
+          " " +
           convert_tens(num - Math.floor((num - 11) / 100) * 100)
         );
       }
@@ -102,13 +101,13 @@
 
       function convertNumToNumTilde(num) {
         if (num == 0) return "epsilon";
-        else return convert_millions(num);
+        else return convert_tens_thousands(num);
       }
 
       function doSpeak() {
         myVoice.interrupt = checkbox.elt.checked;
         const NumTildeValue = convertNumToNumTilde(int(input.value()));
-        // console.log(NumTildeValue);
+        console.log(NumTildeValue);
         myVoice.speak(NumTildeValue); // debug printer for voice options
       }
     </script>

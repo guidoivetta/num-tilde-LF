@@ -26,7 +26,7 @@ var tens = [
 ];
 var hundreds = [
   "",
-  "ciento",
+  "siento",
   "docientos",
   "trecientos",
   "cuatrocientos",
@@ -36,4 +36,17 @@ var hundreds = [
   "ochocientos",
   "novecientos",
   "decientos",
+];
+var thousands = [
+  "",
+  "mil",
+  "dosmil",
+  "tresmil",
+  "cuatromil",
+  "cincomil",
+  "seismil",
+  "sietemil",
+  "ochomil",
+  "nuevemil",
+  "dehseemil",
 ];
