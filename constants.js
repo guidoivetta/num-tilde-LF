@@ -9,11 +9,11 @@ var ones = [
   "siete",
   "ocho",
   "nueve",
-  "dee es",
+  "diez",
 ];
 var tens = [
   "",
-  "dee es",
+  "diez",
   "veinte",
   "treinta",
   "cuarenta",
@@ -22,16 +22,16 @@ var tens = [
   "setenta",
   "ochenta",
   "noventa",
-  "desahnta",
+  "decenta",
 ];
 var hundreds = [
   "",
-  "siento",
+  "ciento",
   "docientos",
   "trecientos",
   "cuatrocientos",
-  "kinientos",
-  "seisientos",
+  "quinientos",
+  "seicientos",
   "setecientos",
   "ochocientos",
   "novecientos",
@@ -48,5 +48,5 @@ var thousands = [
   "sietemil",
   "ochomil",
   "nuevemil",
-  "dehseemil",
+  "decimil",
 ];

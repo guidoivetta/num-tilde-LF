@@ -47,6 +47,8 @@
         label = createDiv("pitch");
         label.position(160, 180);
 
+        myVoice.setLang("es-US")
+
         // say hello:
         // doSpeak();
       }
@@ -95,8 +97,8 @@
       function convert_tens(num) {
         if (num <= 10) return ones[num % 11];
         if (num % 10 == 0)
-          return tens[Math.floor(num / 10) - 1] + " e " + ones[10];
-        return tens[Math.floor(num / 10)] + " e " + ones[num % 10];
+          return tens[Math.floor(num / 10) - 1] + " y " + ones[10];
+        return tens[Math.floor(num / 10)] + " y " + ones[num % 10];
       }
 
       function convertNumToNumTilde(num) {
