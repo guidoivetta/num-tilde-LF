@@ -8,14 +8,7 @@
       var myVoice = new p5.Speech(); // new P5.Speech object
 
       var menuLoaded = 0;
-      var label,
-        input_with_zero,
-        input_without_zero,
-        checkbox,
-        speakbutton,
-        vslider,
-        rslider,
-        pslider; // UI
+      var label, checkbox, speakbutton, vslider, rslider, pslider; // UI
       const NUM_X = 20;
       const NUM_TILDE_X = 300;
       function setup() {
@@ -35,25 +28,37 @@
         checkbox.style("height", "15px");
         checkbox.position(20, 200);
 
-        // speak input with zero:
+        // speak input NUM:
         speakbutton_NUM = createButton("Speak");
         speakbutton_NUM.position(NUM_X, 100);
         speakbutton_NUM.mousePressed(doSpeak_NUM);
 
-        // speak input without zero:
+        // speak input NUM_TILDE:
         speakbutton_NUM_TILDE = createButton("Speak");
         speakbutton_NUM_TILDE.position(NUM_TILDE_X, 100);
         speakbutton_NUM_TILDE.mousePressed(doSpeak_NUM_TILDE);
 
-        // translate to without zero
+        // translate to NUM_TILDE
         translate_to_NUM_TILDE = createButton("->");
         translate_to_NUM_TILDE.position(250, 65 - 13);
         translate_to_NUM_TILDE.mousePressed(doTranslate_to_NUM_TILDE);
 
-        // translate to with zero
+        // translate to NUM
         translate_to_NUM = createButton("<-");
         translate_to_NUM.position(250, 65 + 13);
         translate_to_NUM.mousePressed(doTranslate_to_NUM);
+
+        // increase NUM_TILDE
+        translate_to_NUM_TILDE = createButton("+");
+        translate_to_NUM_TILDE.position(NUM_TILDE_X + 220, 65 - 13);
+        translate_to_NUM_TILDE.style("width", 25);
+        translate_to_NUM_TILDE.mousePressed(increase_NUM_TILDE);
+
+        // decrease NUM_TILDE
+        translate_to_NUM = createButton("-");
+        translate_to_NUM.position(NUM_TILDE_X + 220, 65 + 13);
+        translate_to_NUM.style("width", 25);
+        translate_to_NUM.mousePressed(decrease_NUM_TILDE);
 
         // sliders:
         vslider = createSlider(0, 100, 100);
@@ -179,13 +184,17 @@
         }
       }
 
-      function doTranslate_to_NUM_TILDE() {
-        const NUM_input = int(input_NUM.value());
+      function starFunction(n) {
         let NUM_TILDE_translation = "ε";
-        for (let i = 0; i < NUM_input; i++) {
+        for (let i = 0; i < n; i++) {
           NUM_TILDE_translation = nextNUM_TILDE(NUM_TILDE_translation);
         }
-        input_NUM_TILDE.value(str(NUM_TILDE_translation));
+        return NUM_TILDE_translation;
+      }
+
+      function doTranslate_to_NUM_TILDE() {
+        const NUM_input = int(input_NUM.value());
+        input_NUM_TILDE.value(starFunction(NUM_input));
       }
 
       // NUM_TILDE -> NUM
@@ -204,6 +213,24 @@
       function doTranslate_to_NUM() {
         const NUM_TILDE_input = input_NUM_TILDE.value();
         input_NUM.value(convertNumTildetoNumText(NUM_TILDE_input));
+      }
+
+      // INCREASE and DECREASE NUM_TILDE //////////////////////////////////////
+
+      function increase_NUM_TILDE() {
+        const NUM_TILDE_input = input_NUM_TILDE.value();
+        input_NUM_TILDE.value(nextNUM_TILDE(NUM_TILDE_input));
+      }
+
+      function prevNUM_TILDE(alpha) {
+        const NUM_TILDE_input = input_NUM_TILDE.value();
+        let prevNUM = int(convertNumTildetoNumText(NUM_TILDE_input)) - 1;
+        return starFunction(prevNUM);
+      }
+
+      function decrease_NUM_TILDE() {
+        const NUM_TILDE_input = input_NUM_TILDE.value();
+        input_NUM_TILDE.value(prevNUM_TILDE(NUM_TILDE_input));
       }
     </script>
   </head>
