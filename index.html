@@ -8,23 +8,53 @@
       var myVoice = new p5.Speech(); // new P5.Speech object
 
       var menuLoaded = 0;
-      var label, input, checkbox, speakbutton, vslider, rslider, pslider; // UI
-
+      var label,
+        input_with_zero,
+        input_without_zero,
+        checkbox,
+        speakbutton,
+        vslider,
+        rslider,
+        pslider; // UI
+      const NUM_X = 20;
+      const NUM_TILDE_X = 300;
       function setup() {
-        // input dialog:
-        input = createInput("10");
-        input.style("width", 400);
-        input.position(20, 65);
+        // inputs:
+        input_NUM = createInput("102");
+        input_NUM.style("width", 200);
+        input_NUM.position(NUM_X, 65);
+
+        input_NUM_TILDE = createInput("102");
+        input_NUM_TILDE.style("width", 200);
+        input_NUM_TILDE.position(NUM_TILDE_X, 65);
+
         // checkbox:
         checkbox = createInput(0, 1, 0);
         checkbox.attribute("type", "checkbox");
         checkbox.style("width", "15px");
         checkbox.style("height", "15px");
-        checkbox.position(100, 100);
-        // button:
-        speakbutton = createButton("Speak");
-        speakbutton.position(20, 100);
-        speakbutton.mousePressed(doSpeak);
+        checkbox.position(20, 200);
+
+        // speak input with zero:
+        speakbutton_NUM = createButton("Speak");
+        speakbutton_NUM.position(NUM_X, 100);
+        speakbutton_NUM.mousePressed(doSpeak_NUM);
+
+        // speak input without zero:
+        speakbutton_NUM_TILDE = createButton("Speak");
+        speakbutton_NUM_TILDE.position(NUM_TILDE_X, 100);
+        speakbutton_NUM_TILDE.mousePressed(doSpeak_NUM_TILDE);
+
+        // // translate to without zero
+        // translate_to_NUM_TILDE = createButton("->");
+        // translate_to_NUM_TILDE.position(250, 65-13);
+        // translate_to_NUM_TILDE.mousePressed(doTranslate_to_NUM_TILDE);
+
+        // translate to with zero
+        translate_to_NUM = createButton("<-");
+        translate_to_NUM.position(250, 65);
+        translate_to_NUM.mousePressed(doTranslate_to_NUM);
+
         // sliders:
         vslider = createSlider(0, 100, 100);
         vslider.position(20, 140);
@@ -35,11 +65,14 @@
         pslider = createSlider(1, 200, 100);
         pslider.position(20, 180);
         pslider.mouseReleased(setPitch);
+
         // labels:
-        label = createDiv("say something:");
+        label = createDiv("Número en notación con cero:");
         label.position(20, 40);
+        label = createDiv("Número en notación sin cero:");
+        label.position(300, 40);
         label = createDiv("interrupt?");
-        label.position(125, 100);
+        label.position(45, 200);
         label = createDiv("volume");
         label.position(160, 140);
         label = createDiv("rate");
@@ -47,10 +80,7 @@
         label = createDiv("pitch");
         label.position(160, 180);
 
-        myVoice.setLang("es-US")
-
-        // say hello:
-        // doSpeak();
+        myVoice.setLang("es-US");
       }
 
       function setVolume() {
@@ -66,6 +96,8 @@
       function draw() {
         // why draw when you can click?
       }
+
+      // VOICE TRANSLATION ////////////////////////////////////////////////////
 
       function convert_tens_thousands(num) {
         if (num <= 11110) return convert_thousands(num);
@@ -101,16 +133,48 @@
         return tens[Math.floor(num / 10)] + " y " + ones[num % 10];
       }
 
-      function convertNumToNumTilde(num) {
+      function convertNumToNumTildeVoice(num) {
         if (num == 0) return "epsilon";
         else return convert_tens_thousands(num);
       }
 
-      function doSpeak() {
+      function doSpeak_NUM() {
         myVoice.interrupt = checkbox.elt.checked;
-        const NumTildeValue = convertNumToNumTilde(int(input.value()));
+        myVoice.speak(int(input_NUM.value()));
+      }
+
+      function doSpeak_NUM_TILDE() {
+        myVoice.interrupt = checkbox.elt.checked;
+        const NumTildeValue = convertNumToNumTildeVoice(
+          int(convertNumTildetoNumText(input_NUM_TILDE.value()))
+        );
         console.log(NumTildeValue);
         myVoice.speak(NumTildeValue); // debug printer for voice options
+      }
+
+      // TEXT TRANSLATION /////////////////////////////////////////////////////
+
+      function doTranslate_to_NUM_TILDE() {
+        const NUM_input = input_NUM_.value();
+        let NUM_TILDE_translation = 0
+        input_NUM.value(str(NUM_TILDE_translation));
+      }
+
+      function convertNumTildetoNumText(NUM_TILDE_input) {
+        if(NUM_TILDE_input=='ε') return '0';
+        let NUM_translation = 0
+        for (var i = 0; i < NUM_TILDE_input.length; i++) {
+          let curr_s_i = NUM_TILDE_input.charAt(i);
+          if(curr_s_i == 'd') curr_s_i = '10'
+          NUM_translation+=int(curr_s_i)*Math.pow(10,NUM_TILDE_input.length-i-1)
+        }
+        return(str(NUM_translation));
+      }
+
+      function doTranslate_to_NUM() {
+        const NUM_TILDE_input = input_NUM_TILDE.value();
+        input_NUM.value(convertNumTildetoNumText(NUM_TILDE_input));
+
       }
     </script>
   </head>
