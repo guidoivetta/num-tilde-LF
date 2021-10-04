@@ -45,14 +45,14 @@
         speakbutton_NUM_TILDE.position(NUM_TILDE_X, 100);
         speakbutton_NUM_TILDE.mousePressed(doSpeak_NUM_TILDE);
 
-        // // translate to without zero
-        // translate_to_NUM_TILDE = createButton("->");
-        // translate_to_NUM_TILDE.position(250, 65-13);
-        // translate_to_NUM_TILDE.mousePressed(doTranslate_to_NUM_TILDE);
+        // translate to without zero
+        translate_to_NUM_TILDE = createButton("->");
+        translate_to_NUM_TILDE.position(250, 65 - 13);
+        translate_to_NUM_TILDE.mousePressed(doTranslate_to_NUM_TILDE);
 
         // translate to with zero
         translate_to_NUM = createButton("<-");
-        translate_to_NUM.position(250, 65);
+        translate_to_NUM.position(250, 65 + 13);
         translate_to_NUM.mousePressed(doTranslate_to_NUM);
 
         // sliders:
@@ -153,28 +153,57 @@
       }
 
       // TEXT TRANSLATION /////////////////////////////////////////////////////
-
-      function doTranslate_to_NUM_TILDE() {
-        const NUM_input = input_NUM_.value();
-        let NUM_TILDE_translation = 0
-        input_NUM.value(str(NUM_TILDE_translation));
+      // NUM -> NUM_TILDE
+      function setCharAt(str, index, chr) {
+        if (index > str.length - 1) return str;
+        return str.substring(0, index) + chr + str.substring(index + 1);
       }
 
+      function nextNUM_TILDE(alpha) {
+        if (alpha == "ε") return "1";
+        if (/^d*$/.test(alpha)) return "1".repeat(alpha.length + 1);
+        let newAlpha = `${alpha}`;
+        for (var i = alpha.length - 1; i >= 0; i--) {
+          if (alpha.charAt(i) == "d") {
+            newAlpha = setCharAt(newAlpha, i, "1");
+          } else {
+            let nextSymbol;
+            if (alpha[i] == "9") {
+              nextSymbol = "d";
+            } else {
+              nextSymbol = str(int(alpha[i]) + 1);
+            }
+            newAlpha = setCharAt(newAlpha, i, nextSymbol);
+            return newAlpha;
+          }
+        }
+      }
+
+      function doTranslate_to_NUM_TILDE() {
+        const NUM_input = int(input_NUM.value());
+        let NUM_TILDE_translation = "ε";
+        for (let i = 0; i < NUM_input; i++) {
+          NUM_TILDE_translation = nextNUM_TILDE(NUM_TILDE_translation);
+        }
+        input_NUM_TILDE.value(str(NUM_TILDE_translation));
+      }
+
+      // NUM_TILDE -> NUM
       function convertNumTildetoNumText(NUM_TILDE_input) {
-        if(NUM_TILDE_input=='ε') return '0';
-        let NUM_translation = 0
+        if (NUM_TILDE_input == "ε") return "0";
+        let NUM_translation = 0;
         for (var i = 0; i < NUM_TILDE_input.length; i++) {
           let curr_s_i = NUM_TILDE_input.charAt(i);
-          if(curr_s_i == 'd') curr_s_i = '10'
-          NUM_translation+=int(curr_s_i)*Math.pow(10,NUM_TILDE_input.length-i-1)
+          if (curr_s_i == "d") curr_s_i = "10";
+          NUM_translation +=
+            int(curr_s_i) * Math.pow(10, NUM_TILDE_input.length - i - 1);
         }
-        return(str(NUM_translation));
+        return str(NUM_translation);
       }
 
       function doTranslate_to_NUM() {
         const NUM_TILDE_input = input_NUM_TILDE.value();
         input_NUM.value(convertNumTildetoNumText(NUM_TILDE_input));
-
       }
     </script>
   </head>
