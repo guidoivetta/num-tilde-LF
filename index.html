@@ -104,12 +104,12 @@
 
       // VOICE TRANSLATION ////////////////////////////////////////////////////
 
-      function convert_tens_thousands(num) {
+      function convert_hundred_thousands(num) {
         if (num <= 11110) return convert_thousands(num);
         return (
-          tens[Math.floor((num - 1111) / 10000)] +
-          " " +
-          convert_thousands(num - Math.floor((num - 1111) / 10000) * 10000)
+          convert_hundreds(int(str(num).slice(0, -3))) +
+          " mil " +
+          convert_thousands(int(str(num).slice(3)))
         );
       }
 
@@ -132,15 +132,15 @@
       }
 
       function convert_tens(num) {
-        if (num <= 10) return ones[num % 11];
+        if (num <= 20) return onesAndTeens[num];
         if (num % 10 == 0)
-          return tens[Math.floor(num / 10) - 1] + " y " + ones[10];
-        return tens[Math.floor(num / 10)] + " y " + ones[num % 10];
+          return tenti[Math.floor(num / 10) - 1] + " " + onesAndTeens[10];
+        return tenti[Math.floor(num / 10)] + " " + onesAndTeens[num % 10];
       }
 
       function convertNumToNumTildeVoice(num) {
-        if (num == 0) return "epsilon";
-        else return convert_tens_thousands(num);
+        if (num == 0) return "épsilon";
+        else return convert_hundred_thousands(num);
       }
 
       function doSpeak_NUM() {

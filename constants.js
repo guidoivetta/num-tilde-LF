@@ -1,4 +1,4 @@
-var ones = [
+var onesAndTeens = [
   "",
   "uno",
   "dos",
@@ -10,7 +10,31 @@ var ones = [
   "ocho",
   "nueve",
   "diez",
+  "dieciuno",
+  "diecidós",
+  "diecitrés",
+  "diecicuatro",
+  "diecicinco",
+  "dieciséis",
+  "diecisiete",
+  "dieciocho",
+  "diecinueve",
+  "diecidiez",
 ];
+var tenti = [
+  "",
+  "dieci",
+  "veinti",
+  "treinti",
+  "cuarenti",
+  "cincuenti",
+  "sesenti",
+  "setenti",
+  "ochenti",
+  "noventi",
+  "decenti",
+];
+
 var tens = [
   "",
   "diez",
@@ -24,6 +48,7 @@ var tens = [
   "noventa",
   "decenta",
 ];
+
 var hundreds = [
   "",
   "ciento",
