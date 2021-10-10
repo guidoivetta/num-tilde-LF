@@ -103,25 +103,6 @@
       }
 
       // VOICE TRANSLATION ////////////////////////////////////////////////////
-
-      function convert_hundred_thousands(num) {
-        if (num <= 11110) return convert_thousands(num);
-        return (
-          convert_hundreds(int(str(num).slice(0, -3))) +
-          " mil " +
-          convert_thousands(int(str(num).slice(3)))
-        );
-      }
-
-      function convert_thousands(num) {
-        if (num <= 1110) return convert_hundreds(num);
-        return (
-          thousands[Math.floor((num - 111) / 1000)] +
-          " " +
-          convert_hundreds(num - Math.floor((num - 111) / 1000) * 1000)
-        );
-      }
-
       function convert_hundreds(num) {
         if (num <= 110) return convert_tens(num);
         return (
@@ -134,13 +115,42 @@
       function convert_tens(num) {
         if (num <= 20) return onesAndTeens[num];
         if (num % 10 == 0)
-          return tenti[Math.floor(num / 10) - 1] + " " + onesAndTeens[10];
-        return tenti[Math.floor(num / 10)] + " " + onesAndTeens[num % 10];
+          return tenti[Math.floor(num / 10) - 1] + onesAndTeens[10];
+        return tenti[Math.floor(num / 10)] + onesAndTeens[num % 10];
       }
 
-      function convertNumToNumTildeVoice(num) {
-        if (num == 0) return "épsilon";
-        else return convert_hundred_thousands(num);
+      function add_group_of_three_separator(res, group, index) {
+        if (group == "1") {
+          return `${group_of_three_separators_for_1[index]} ${res}`;
+        }
+        return `${group} ${group_of_three_separators[index]} ${res}`;
+      }
+
+      function alt_convert(alpha) {
+        groups_of_three = alpha.split(/(?=(?:...)*$)/).reverse();
+        res = "";
+        groups_of_three.forEach((group, index) => {
+          if (!group.includes("d")) {
+            if (group == "999") group = "novecientos noventa y nueve";
+            if (index == 0) {
+              res = group;
+            } else {
+              res = add_group_of_three_separator(res, group, index);
+            }
+          } else {
+            numTildeGroupTranslation = convert_hundreds(
+              int(convertNumTildetoNumText(group))
+            );
+            res = `${numTildeGroupTranslation} ${group_of_three_separators[index]} ${res}`;
+          }
+        });
+        return res;
+      }
+
+      function convertNumToNumTildeVoice(alpha) {
+        if (alpha == "" || alpha == "ε") return "épsilon";
+        if (!alpha.includes("d")) return alpha;
+        return alt_convert(alpha);
       }
 
       function doSpeak_NUM() {
@@ -151,7 +161,7 @@
       function doSpeak_NUM_TILDE() {
         myVoice.interrupt = checkbox.elt.checked;
         const NumTildeValue = convertNumToNumTildeVoice(
-          int(convertNumTildetoNumText(input_NUM_TILDE.value()))
+          input_NUM_TILDE.value()
         );
         console.log(NumTildeValue);
         myVoice.speak(NumTildeValue); // debug printer for voice options
@@ -192,9 +202,33 @@
         return NUM_TILDE_translation;
       }
 
+      function starFunctionOptimized(alpha) {
+        if (alpha == "0") return "ε";
+        let newAlpha = `${alpha}`;
+        for (var i = 1; i < newAlpha.length; i++) {
+          if (newAlpha.charAt(i) == "0" || newAlpha.charAt(i) == "-") {
+            newAlpha = setCharAt(newAlpha, i, "d");
+
+            prevChar = newAlpha.charAt(i - 1);
+            if (prevChar == "d") {
+              newAlpha = setCharAt(newAlpha, i - 1, "9");
+            } else if (prevChar == "1") {
+              newAlpha = setCharAt(newAlpha, i - 1, "-");
+              if (i - 2 >= 0) {
+                i = i - 2;
+              }
+            } else {
+              newAlpha = setCharAt(newAlpha, i - 1, str(int(prevChar) - 1));
+            }
+          }
+        }
+
+        return newAlpha.replace("-", "");
+      }
+
       function doTranslate_to_NUM_TILDE() {
-        const NUM_input = int(input_NUM.value());
-        input_NUM_TILDE.value(starFunction(NUM_input));
+        const NUM_input = input_NUM.value();
+        input_NUM_TILDE.value(starFunctionOptimized(NUM_input));
       }
 
       // NUM_TILDE -> NUM
@@ -231,6 +265,26 @@
       function decrease_NUM_TILDE() {
         const NUM_TILDE_input = input_NUM_TILDE.value();
         input_NUM_TILDE.value(prevNUM_TILDE(NUM_TILDE_input));
+      }
+
+      // TESTS ////////////////////////////////////////////////////////////////
+
+      function TEST_starFunctionOptimized() {
+        N = 100000;
+        for (let i = 0; i < N; i++) {
+          const translation = starFunctionOptimized(str(i));
+          const checkValue = convertNumTildetoNumText(translation);
+          if (i % (N / 10) == 0) {
+            console.log(`${i}: ${checkValue}`);
+          }
+          if (str(i) != checkValue) {
+            console.log(`Falló en ${i}: ${translation}`);
+            break;
+          }
+          if (i == N - 1) {
+            console.log("Pasó todos los tests");
+          }
+        }
       }
     </script>
   </head>
