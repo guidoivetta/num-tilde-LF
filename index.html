@@ -5,7 +5,7 @@
     <script src="./lib/p5.speech.js"></script>
     <script type="text/javascript" src="./constants.js"></script>
     <script>
-      var myVoice = new p5.Speech(); // new P5.Speech object
+      var myVoice = new p5.Speech('Rocko (Spanish (Mexico))'); // new P5.Speech object
 
       var menuLoaded = 0;
       var label, checkbox, speakbutton, vslider, rslider, pslider; // UI
@@ -84,8 +84,6 @@
         label.position(160, 160);
         label = createDiv("pitch");
         label.position(160, 180);
-
-        myVoice.setLang("es-US");
       }
 
       function setVolume() {
